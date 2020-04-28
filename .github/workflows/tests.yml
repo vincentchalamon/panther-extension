@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php-versions: ['7.1', '7.2', '7.3', '7.4']
+        php-versions: [ '7.2', '7.3', '7.4']
     steps:
       # https://github.com/actions/checkout (official)
       - name: Checkout

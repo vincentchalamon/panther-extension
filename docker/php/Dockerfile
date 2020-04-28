@@ -1,4 +1,4 @@
-FROM php:7.1.33-cli
+FROM php:7.2.30-cli
 
 ENV APP_DIR=/srv/app \
     BUILD_SCRIPTS_DIR=/build-scripts
