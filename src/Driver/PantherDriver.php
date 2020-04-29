@@ -226,7 +226,7 @@ final class PantherDriver extends CoreDriver
     public function getStatusCode()
     {
         try {
-            $this->client->getResponse()->getStatusCode();
+            $this->client->getStatus();
         } catch (\LogicException $exception) {
             throw new UnsupportedDriverActionException(
                 sprintf('The %s::%s() method cannot be called when using %s', self::class, __METHOD__, self::class),
@@ -414,6 +414,17 @@ final class PantherDriver extends CoreDriver
     /**
      * {@inheritdoc}
      */
+    public function rightClick($xpath)
+    {
+        $element = $this->client->findElement(WebDriverBy::xpath($xpath));
+        $mouse = $this->client->getMouse();
+
+        $mouse->contextClick($element->getCoordinates());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function attachFile($xpath, $path)
     {
         $element = $this->client->findElement(WebDriverBy::xpath($xpath));
@@ -452,9 +463,10 @@ final class PantherDriver extends CoreDriver
      */
     public function keyPress($xpath, $char, $modifier = null)
     {
-        $keyboard = $this->client->getKeyboard();
+        $element = $this->client->findElement(WebDriverBy::xpath($xpath));
+        $actions = $this->client->action();
 
-        $keyboard->pressKey($char);
+        $actions->keyDown($element, $char);
     }
 
     /**
@@ -462,9 +474,10 @@ final class PantherDriver extends CoreDriver
      */
     public function keyUp($xpath, $char, $modifier = null)
     {
-        $keyboard = $this->client->getKeyboard();
+        $element = $this->client->findElement(WebDriverBy::xpath($xpath));
+        $actions = $this->client->action();
 
-        $keyboard->releaseKey($char);
+        $actions->keyUp($element, $char);
     }
 
     /**
@@ -478,6 +491,21 @@ final class PantherDriver extends CoreDriver
         $destinationElement = $this->client->findElement(WebDriverBy::xpath($destinationXpath));
 
         $actions->dragAndDrop($sourceElement, $destinationElement);
+    }
+
+    public function scrollTo(int $xOffset, int $yOffset): void
+    {
+        $touchScreen = $this->client->getTouch();
+
+        $touchScreen->scroll($xOffset, $yOffset);
+    }
+
+    public function scrollFromTo(string $xpath, int $xOffset, int $yOffset): void
+    {
+        $touchScreen = $this->client->getTouch();
+        $element = $this->client->findElement(WebDriverBy::xpath($xpath));
+
+        $touchScreen->scrollFromElement($element, $xOffset, $yOffset);
     }
 
     /**
@@ -537,7 +565,7 @@ final class PantherDriver extends CoreDriver
         $this->client->findElement(WebDriverBy::xpath($xpath))->submit();
     }
 
-    public function moveTofullScreen(): void
+    public function moveToFullScreen(): void
     {
         $options = $this->client->manage();
 

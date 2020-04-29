@@ -158,6 +158,42 @@ final class PantherContext extends RawMinkContext
         }
     }
 
+    /**
+     * @Given I switch to fullscreen
+     * @And   I switch to fullscreen
+     */
+    public function iSwitchToFullScreen(): void
+    {
+        $this->getDriver()->moveToFullScreen();
+    }
+
+    /**
+     * @Given I change the screen orientation to :orientation
+     * @And   I change the screen orientation to :orientation
+     */
+    public function iChangeTheScreenOrientation(string $orientation = 'PORTRAIT'): void
+    {
+        $this->getDriver()->setOrientation($orientation);
+    }
+
+    /**
+     * @Given I scroll to :xOffset :yOffset
+     * @And   I scroll to :xOffset :yOffset
+     */
+    public function iScrollTo(int $xOffset, int $yOffset): void
+    {
+        $this->getDriver()->scrollTo($xOffset, $yOffset);
+    }
+
+    /**
+     * @Given I scroll from :element to :xOffset :yOffset
+     * @And   I scroll from :element to :xOffset :yOffset
+     */
+    public function iScrollFromTo(string $element, int $xOffset, int $yOffset): void
+    {
+        $this->getDriver()->scrollFromTo($element, $xOffset, $yOffset);
+    }
+
     private function getDriver(): PantherDriver
     {
         $driver = $this->getSession()->getDriver();

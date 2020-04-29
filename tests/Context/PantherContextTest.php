@@ -206,6 +206,30 @@ final class PantherContextTest extends TestCase
         $context->iShouldHave(1);
     }
 
+    public function testScreenCannotSwitchToFullScreenWithoutSession(): void
+    {
+        static::expectException(\RuntimeException::class);
+        (new PantherContext())->iSwitchToFullScreen();
+    }
+
+    public function testScreenCannotChangeOrientationWithoutSession(): void
+    {
+        static::expectException(\RuntimeException::class);
+        (new PantherContext())->iChangeTheScreenOrientation();
+    }
+
+    public function testScrollCannotBeStartedWithoutSession(): void
+    {
+        static::expectException(\RuntimeException::class);
+        (new PantherContext())->iScrollTo(1, 2);
+    }
+
+    public function testScrollFromToCannotBeStartedWithoutSession(): void
+    {
+        static::expectException(\RuntimeException::class);
+        (new PantherContext())->iScrollFromTo('test', 1, 2);
+    }
+
     private function createMinkContext(InvokedCount $minkInvocationCount): Mink
     {
         $session = $this->createMock(Session::class);
