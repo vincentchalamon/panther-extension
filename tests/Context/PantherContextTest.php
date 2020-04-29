@@ -230,6 +230,24 @@ final class PantherContextTest extends TestCase
         (new PantherContext())->iScrollFromTo('test', 1, 2);
     }
 
+    public function testCapabilityCannotBeCheckedWithoutSession(): void
+    {
+        static::expectException(\RuntimeException::class);
+        (new PantherContext())->ifTheBrowserCapabilityIsEnabled('test');
+    }
+
+    public function testCapabilityCannotBeSetWithoutSession(): void
+    {
+        static::expectException(\RuntimeException::class);
+        (new PantherContext())->iTryToSetANewBrowserCapabilityWithTheValue('test', 'test');
+    }
+
+    public function testScreenshotCannotBeTakenWithoutSession(): void
+    {
+        static::expectException(\RuntimeException::class);
+        (new PantherContext())->iTakeANewScreenshot(sys_get_temp_dir());
+    }
+
     private function createMinkContext(InvokedCount $minkInvocationCount): Mink
     {
         $session = $this->createMock(Session::class);

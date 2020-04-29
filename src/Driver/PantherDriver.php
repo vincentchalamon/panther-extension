@@ -138,6 +138,20 @@ final class PantherDriver extends CoreDriver
         $this->client->back();
     }
 
+    public function isCapabilityAvailable(string $capability): bool
+    {
+        $capabilities = $this->client->getCapabilities();
+
+        return $capabilities->is($capability);
+    }
+
+    public function setCapability(string $capability, string $value): void
+    {
+        $capabilities = $this->client->getCapabilities();
+
+        $capabilities->setCapability($capability, $value);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -249,6 +263,11 @@ final class PantherDriver extends CoreDriver
     public function getScreenshot()
     {
         return $this->client->takeScreenshot();
+    }
+
+    public function takeScreenshot(string $path): void
+    {
+        $this->client->takeScreenshot($path);
     }
 
     /**
@@ -516,17 +535,17 @@ final class PantherDriver extends CoreDriver
         $this->client->executeScript($script);
     }
 
-    public function executeAsyncScript($script)
-    {
-        $this->client->executeAsyncScript($script);
-    }
-
     /**
      * {@inheritdoc}
      */
     public function evaluateScript($script)
     {
-        throw new UnsupportedDriverActionException(sprintf('The %s::%s() method cannot be used.', self::class, __METHOD__), $this);
+        return $this->client->executeScript($script);
+    }
+
+    public function executeAsyncScript(string $script, array $arguments = []): void
+    {
+        $this->client->executeAsyncScript($script, $arguments);
     }
 
     /**
@@ -595,6 +614,15 @@ final class PantherDriver extends CoreDriver
         $options = $this->client->manage();
 
         return $options->getLog($type);
+    }
+
+    public function trackAjaxRequest(string $uri, string $alias, string $method = 'GET'): void
+    {
+        if (\array_key_exists($alias, $this->requests)) {
+            throw new InvalidArgumentException(sprintf('The "%s" alias already exist, please change the desired one.', $alias));
+        }
+
+        // TODO
     }
 
     public function waitFor(string $element, int $timeoutInSeconds = 30, int $intervalInMillisecond = 250): void

@@ -194,6 +194,33 @@ final class PantherContext extends RawMinkContext
         $this->getDriver()->scrollFromTo($element, $xOffset, $yOffset);
     }
 
+    /**
+     * @Given If the :capability browser capability is enabled
+     * @And   If the :capability browser capability is enabled
+     */
+    public function ifTheBrowserCapabilityIsEnabled(string $capability): void
+    {
+        $this->getDriver()->isCapabilityAvailable($capability);
+    }
+
+    /**
+     * @Given I try to set a new browser capability called :capability with the value :value
+     * @And   I try to set a new browser capability called :capability with the value :value
+     */
+    public function iTryToSetANewBrowserCapabilityWithTheValue(string $capability, string $value): void
+    {
+        $this->getDriver()->setCapability($capability, $value);
+    }
+
+    /**
+     * @Given I take a new screenshot
+     * @And   I take a new screenshot
+     */
+    public function iTakeANewScreenshot(): void
+    {
+        $this->getDriver()->takeScreenshot($this->getMinkParameter('files_path'));
+    }
+
     private function getDriver(): PantherDriver
     {
         $driver = $this->getSession()->getDriver();
